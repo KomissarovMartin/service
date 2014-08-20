@@ -1,15 +1,5 @@
 var User = require('./models/user');
 
-//User.create([
-//    {name: 'Edward1'},
-//    {name: 'Edward2'},
-//    {name: 'Edward3'},
-//    {name: 'Edward4'},
-//    {name: 'Edward5'},
-//    {name: 'Edward6'},
-//    {name: 'Edward7'}
-//]);
-
 var query = User;
 
 var userIds = [];
