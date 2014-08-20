@@ -6,17 +6,20 @@ app.get('/', function(req, res){
     res.sendFile('/home/user/.work/projects/service/index.html');
 });
 
+var sockets = [];
+
 io.on('connection', function(socket) {
 
-    socket.emit('user:connect');
+    socket.on('typing', function(){
+        socket.emit('typing');
+    });
 
     socket.on('disconnect', function(){
-        io.emit('user:disconnect');
+        socket.emit('user:disconnect');
     });
 
     socket.on('message', function(msg){
-        console.log('incoming message: ' + msg);
-        io.emit('message', msg);
+        socket.emit('message', msg);
     });
 
 });

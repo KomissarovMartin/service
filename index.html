@@ -27,10 +27,23 @@
 
     var socket = io();
 
+    $('#m').on('keydown', function(){
+        socket.emit('typing');
+    });
+
     $('form').submit(function(){
         socket.emit('message', $('#m').val());
         $('#m').val('');
         return false;
+    });
+
+    socket.on('typing', function() {
+        if (!($('#typing').size())) {
+            $('#messages').append($('<li>').html("<i id='typing' style='color: gray'>typing...</i>"));
+            setTimeout(function(){
+                $('#typing').parent().remove();
+            }, 3000);
+        }
     });
 
     socket.on('message', function(msg){
@@ -38,6 +51,7 @@
     });
 
     socket.on('user:connect', function(){
+        socket.emit('connect', "Hitman");
         $('#messages').append($('<li>').html("<i>user come here</i>"));
     });
 
