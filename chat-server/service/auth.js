@@ -56,14 +56,17 @@ module.exports = function () {
         User.findOne(userCredentials, function (err, user) {
 
             if (user) {
+                
                 user.token.push(generateToken(user.login));
                 user.save();
+
+                if (successCallback) {
+                    successCallback(user);
+                    return;
+                }
             }
 
-            if (successCallback) {
-                successCallback(user);
-                return;
-            }
+
             if (failedCallback) {
                 failedCallback(err);
                 return;
