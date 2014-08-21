@@ -1,21 +1,17 @@
-var User = require('./models/user');
+global._require = function (module, global) {
+    if (!global)
+        return require(__dirname+'/'+module);
+    console.log(module)
+    return require(module);
+};
+global.settings = global._require('config');
 
-var query = User;
+var express = global._require('express', true);
+var app = express();
 
-var userIds = [];
-
-query.find(function(err, user) {
-
-    user.forEach(function(user, index) {
-
-        userIds[index] = user._id;
-    });
-
-    User.find({_id:{$in:userIds.splice(1,3)}}, function(err, users){
-        users.forEach(function(user){
-            console.log(user._id);
-            console.log(user.name);
-        });
-    });
-
+app.get('/login', function (req, res) {
+    var login = new (global._require('controller/auth'))();
+    login.main(req, res);
 });
+
+app.listen(global.settings.server.listen);

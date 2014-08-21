@@ -1,11 +1,14 @@
 module.exports = {
-    'socket' : {
-        'port' : '8000'
+    server : {
+        listen : 3000
     },
-    'database': {
-        'server' : 'localhost',
-        'port' : 27017,
-        'name' : 'chat'
+    socket : {
+        port : '8000'
+    },
+    database: {
+        server : 'localhost',
+        port : 27017,
+        name : 'chat'
     }
 };
 

@@ -1,7 +1,7 @@
-var Abstract = function ()
+module.exports = function ()
 {
-    var config = require('../config').database;
-    this.mongoose = require('mongoose')
+    var config = global.settings.database;
+    this.mongoose = global._require('mongoose', true)
         .connect('mongodb://' + config.server + ':' + config.port + '/' + config.name);
 
     this.model = function (name, fields) {
@@ -10,5 +10,3 @@ var Abstract = function ()
 
     var self = this;
 };
-
-module.exports = new Abstract();
