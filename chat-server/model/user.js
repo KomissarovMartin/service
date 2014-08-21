@@ -1,7 +1,8 @@
 module.exports = new (global._require('model/abstract'))().model('User', {
     login : String,
     password : String,
-    token : String
+    token : Array,
+    socket: Array
 });
 
 

@@ -1,6 +1,7 @@
 module.exports = function ()
 {
     var config = global.settings.database;
+
     this.mongoose = global._require('mongoose', true)
         .connect('mongodb://' + config.server + ':' + config.port + '/' + config.name);
 

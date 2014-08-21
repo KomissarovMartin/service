@@ -1,7 +1,6 @@
 global._require = function (module, global) {
     if (!global)
         return require(__dirname+'/'+module);
-    console.log(module)
     return require(module);
 };
 global.settings = global._require('config');

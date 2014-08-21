@@ -5,15 +5,21 @@ module.exports = function()
         var auth = new (global._require('service/auth'))();
         var response = new (global._require('core/response/auth'))(res);
 
-        var error = auth.signIn(
+        auth.setCredentials(
             req.param('login', false),
             req.param('password', false)
         );
 
-        if (error) {
-            response.failed(error);
-        }
+        auth.success(function(user) {
+            response.success(user);
+        });
 
-        response.success(auth.getUser());
+        auth.failed( function (err) {
+            auth.signUp(
+                req.param('login', false),
+                req.param('password', false)
+            );
+        });
+        auth.signIn();
     };
 };

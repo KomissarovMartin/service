@@ -7,8 +7,9 @@ module.exports = function (res) {
 
     this.success = function (user) {
         res.status(self.statuses.success).send({
+            userId : user._id,
             token  : user.token,
-            userId : user.userId
+            login  : user.login
         });
     };
 
