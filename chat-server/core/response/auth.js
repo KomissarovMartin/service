@@ -19,5 +19,9 @@ module.exports = function (res) {
         });
     }
 
+    this.signOut = function() {
+        res.send({});
+    }
+
     var self = this;
 };
