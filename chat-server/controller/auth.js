@@ -1,52 +1,39 @@
 module.exports = function(request, response)
 {
-    var auth = new (global._require('service/auth'))();
+    var user = new (global._require('service/user'))();
     var authResponse = new (global._require('core/response/auth'))(response);
 
-    if (request.param('x-auth')) {
+    this.login = function () {
 
-        auth.setUserHeaderCredentials(
-                request.param('x-auth').split(':')[0],
-                request.param('x-auth').split(':')[1]
-            )
-            .success(function(user){
+        credentials = {
+            login: request.param('login', false),
+            password: request.param('password', false)
+        };
+
+        user.signIn(credentials, function (error, user) {
+            if (error) {
+                user.signUp(credentials, function(error, user){
+                    if (error) {
+                        authResponse.failed(error);
+                    }
+                    else {
+                        authResponse.success(user);
+                    }
+                });
+            }
+            else {
                 authResponse.success(user);
-            })
-            .failed(function(err){
-                authResponse.failed(['token or user-id is not valid']);
-            })
-            .signInWithToken();
-
-        return;
-    }
-
-    this.main = function () {
-
-        auth.setCredentials(
-                request.param('login', false),
-                request.param('password', false)
-            )
-            .success(function(user) {
-                authResponse.success(user);
-            })
-            .failed(function (err) {
-                auth.signUp(
-                    request.param('login', false),
-                    request.param('password', false)
-                );
-            })
-            .signIn();
+            }
+        });
     };
 
     this.out = function () {
 
         if (request.param('x-auth')) {
-
-            auth.setUserHeaderCredentials(
-                    request.param('x-auth').split(':')[0],
-                    request.param('x-auth').split(':')[1]
-                )
-                .signOut();
+            user.signOut({
+                userId: request.param('x-auth').split(':')[1],
+                token: request.param('x-auth').split(':')[0]
+            });
         }
 
         authResponse.signOut();

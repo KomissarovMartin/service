@@ -1,6 +1,6 @@
 global._require = function (module, global) {
     if (!global)
-        return require(__dirname+'/'+module);
+        return require([__dirname, module].join('/'));
     return require(module);
 };
 global.settings = global._require('config');
@@ -8,14 +8,24 @@ global.settings = global._require('config');
 var express = global._require('express', true);
 var app = express();
 
-app.get('/login', function (req, res) {
-    var login = new (global._require('controller/auth'))(req, res);
-    login.main();
+app.get('/login', function (request, response) {
+
+    var auth = new (global._require('controller/auth'))(
+        request,
+        response
+    );
+
+    auth.login();
 });
 
-app.get('/logout', function (req, res) {
-    var login = new (global._require('controller/auth'))(req, res);
-    login.out();
+app.get('/chat', function (request, response) {
+
+    var chat = new (global._require('controller/chat'))(
+        request,
+        response
+    );
+
+    chat.init();
 });
 
 app.listen(global.settings.server.listen);

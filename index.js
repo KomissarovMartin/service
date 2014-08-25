@@ -19,12 +19,9 @@ io.on('connection', function(socket) {
     });
 
     socket.on('message', function(msg){
-        socket.emit('message', msg);
+        socket.emit('message', msg.message);
     });
 
 });
 
-http.listen(3000, function(){
-    console.log('listening on *:3000');
-});
-
+http.listen(3001);

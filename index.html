@@ -25,14 +25,15 @@
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
 
-    var socket = io();
+    var token = '010ee525ae30d794e6530854c8661f16:53f60155613b76101e0c1c73';
+    var socket = io.connect(null, {query: "a-auth=" + token});
 
     $('#m').on('keydown', function(){
         socket.emit('typing');
     });
 
     $('form').submit(function(){
-        socket.emit('message', $('#m').val());
+        socket.emit('message', {message:$('#m').val(), token: token});
         $('#m').val('');
         return false;
     });

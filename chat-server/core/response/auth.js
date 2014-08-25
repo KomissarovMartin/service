@@ -1,4 +1,4 @@
-module.exports = function (res) {
+module.exports = function (response) {
 
     this.statuses = {
         success : 200,
@@ -6,21 +6,25 @@ module.exports = function (res) {
     };
 
     this.success = function (user) {
-        res.status(self.statuses.success).send({
-            userId : user._id,
-            token  : user.token,
-            login  : user.login
-        });
+        response
+            .status(self.statuses.success)
+            .send({
+                userId : user._id,
+                token  : user.token,
+                login  : user.login
+            });
     };
 
     this.failed = function (error) {
-        res.status(self.statuses.failed).send({
-            error: error
-        });
+        response
+            .status(self.statuses.failed)
+            .send({
+                error: error
+            });
     }
 
     this.signOut = function() {
-        res.send({});
+        response.send({});
     }
 
     var self = this;
