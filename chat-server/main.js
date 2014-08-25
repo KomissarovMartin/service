@@ -5,8 +5,9 @@ global._require = function (module, global) {
 };
 global.settings = global._require('config');
 
-var express = global._require('express', true);
-var app = express();
+var app = global._require('express', true)();
+var http = global._require('http', true).Server(app);
+var io = require('socket.io')(http);
 
 app.get('/login', function (request, response) {
 
@@ -19,13 +20,9 @@ app.get('/login', function (request, response) {
 });
 
 app.get('/chat', function (request, response) {
-
-    var chat = new (global._require('controller/chat'))(
-        request,
-        response
-    );
-
-    chat.init();
+    new (global._require('controller/chat'))(request, response);
 });
 
-app.listen(global.settings.server.listen);
+
+http.listen(global.settings.server.listen);
+
