@@ -21,43 +21,56 @@
     <input id="m" autocomplete="off" /><button>Send</button>
 </form>
 
-<script src="http://localhost:3001/socket.io/socket.io.js"></script>
+<div class="socket-io"></div>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
 
-    var token = '010ee525ae30d794e6530854c8661f16:53f60155613b76101e0c1c73';
-    var socket = io.connect("http://localhost:3001/", {query: token});
+    var config = {
+        server: 'http://localhost:3000/',
+        token: '010ee525ae30d794e6530854c8661f16:53f60155613b76101e0c1c73'
+    };
 
-    $('#m').on('keydown', function(){
-        socket.emit('typing');
-    });
+    $(function(){
 
-    $('form').submit(function(){
-        socket.emit('message', {message:$('#m').val(), token: token});
-        $('#m').val('');
-        return false;
-    });
+        $.getScript(
+            'http://localhost:3000/socket.io/socket.io.js',
+            function () {
+                var socket = io.connect(config.server, {query: config.token});
 
-    socket.on('typing', function() {
-        if (!($('#typing').size())) {
-            $('#messages').append($('<li>').html("<i id='typing' style='color: gray'>typing...</i>"));
-            setTimeout(function(){
-                $('#typing').parent().remove();
-            }, 3000);
-        }
-    });
+                $('#m').on('keydown', function(){
+                    socket.emit('typing');
+                });
 
-    socket.on('message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-    });
+                $('form').submit(function(){
+                    socket.emit('message', {message:$('#m').val(), token: config.token});
+                    $('#m').val('');
+                    return false;
+                });
 
-    socket.on('user:connect', function(){
-        socket.emit('connect', "Hitman");
-        $('#messages').append($('<li>').html("<i>user come here</i>"));
-    });
+                socket.on('typing', function() {
+                    if (!($('#typing').size())) {
+                        $('#messages').append($('<li>').html("<i id='typing' style='color: gray'>typing...</i>"));
+                        setTimeout(function(){
+                            $('#typing').parent().remove();
+                        }, 500);
+                    }
+                });
 
-    socket.on('user:disconnect', function(){
-        $('#messages').append($('<li>').html("<i>user has left</i>"));
+                socket.on('message', function(msg){
+                    $('#messages').append($('<li>').text(msg));
+                });
+
+                socket.on('user:connect', function(){
+                    socket.emit('connect', "Hitman");
+                    $('#messages').append($('<li>').html("<i>user come here</i>"));
+                });
+
+                socket.on('user:disconnect', function(){
+                    $('#messages').append($('<li>').html("<i>user has left</i>"));
+                });
+            }
+        )
+
     });
 
 </script>

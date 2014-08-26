@@ -19,6 +19,22 @@ app.get('/login', function (request, response) {
     auth.login();
 });
 
+io.on('connection', function(socket) {
+
+    socket.on('typing', function(){
+        socket.emit('typing');
+    });
+
+    socket.on('disconnect', function(){
+        socket.emit('user:disconnect');
+    });
+
+    socket.on('message', function(msg){
+        socket.emit('message', msg.message);
+    });
+
+});
+
 
 http.listen(global.settings.server.listen);
 
