@@ -1,0 +1,15 @@
+{
+    "name": "chat-client",
+    "version" : "0.1",
+    "dependencies" : {
+        "jquery" : "*"
+    },
+    "install" : {
+        "path" : "vendor/include",
+        "sources" : {
+            "jquery" : [
+                "vendor/jquery/dist/*"
+            ]
+        }
+    }
+}
