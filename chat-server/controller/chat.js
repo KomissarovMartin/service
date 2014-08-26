@@ -3,11 +3,10 @@ module.exports = function(request, response)
     this.user = null;
 
     this.init(request, response, function (user) {
+
         self.user = user;
 
-        console.log(user);
-
-        response.send("Куку! епта");
+        response.sendFile('/home/user/.work/projects/service/chat-server/view/chat.html');
     });
 
     var self = this;

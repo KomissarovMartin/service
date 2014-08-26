@@ -1,20 +1,26 @@
-var ChatServer = function ()
-{
-    this.options = require('./config.js').socket;
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-    this.io = require('socket.io');
+io.on('connection', function(socket) {
 
-    this.init = function() {
-        self
-            .io.listen(this.options.port)
-            .on('connection', function (socket) {
-                console.log('on:connection');
-            });
+    console.log(socket.handshake.query);
 
-        return self;
-    };
+    socket.on('typing', function(){
+        console.log("typing");
+        socket.emit('typing');
+    });
 
-    var self = this;
-};
+    socket.on('disconnect', function(){
+        console.log("disconnect");
+        socket.emit('user:disconnect');
+    });
 
-module.exports = new ChatServer();
+    socket.on('message', function(msg){
+        console.log("message");
+        socket.emit('message', msg.message);
+    });
+
+});
+
+http.listen(3001);

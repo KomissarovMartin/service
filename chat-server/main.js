@@ -19,10 +19,6 @@ app.get('/login', function (request, response) {
     auth.login();
 });
 
-app.get('/chat', function (request, response) {
-    new (global._require('controller/chat'))(request, response);
-});
-
 
 http.listen(global.settings.server.listen);
 
