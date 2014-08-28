@@ -17,8 +17,6 @@ module.exports = function ( ) {
                 callback(error, userModel);
             }
         });
-
-        return this;
     }
 
     this.signIn = function (crenentials, callback) {
@@ -29,16 +27,16 @@ module.exports = function ( ) {
         };
 
         User.findOne(cond, function (error, user) {
+
             if (user) {
                 user.token.push(generateToken(user.login));
                 user.save();
             }
+
             if (callback) {
-                callback(error, user);
+                callback(user);
             }
         });
-
-        return this;
     };
 
     function generateToken (login) {
@@ -50,21 +48,49 @@ module.exports = function ( ) {
         return global._require('MD5', true)(new Date().getTime() + login)
     }
 
+    function isValid(credentials) {
+
+        if (!credentials.password || credentials.password.length == 0) {
+            return false;
+        }
+
+        if (!credentials.login || credentials.login.length == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     this.signUp = function (credentials, callback) {
+
         User.findOne({login: credentials.login}, function(error, user) {
+
             if (!user) {
+
+                if (!isValid(credentials)) {
+
+                    if (callback) {
+                        callback(['invalid credentials'], user);
+                    }
+
+                    return;
+                }
+
                 var user = new User({
                     login: credentials.login,
                     password: credentials.password,
-                    token: [generateToken(login)]
+                    token: [generateToken(credentials.login)]
                 });
+
                 user.save(function (error) {
                     if (callback) {
                         callback(error, user);
                     }
                 });
+
                 return;
             }
+
             if (callback) {
                 callback(['login exists'], user);
             }
@@ -72,7 +98,9 @@ module.exports = function ( ) {
     }
 
     this.signOut = function (credentials, callback) {
+
         User.findOne({_id:credentials.userId, token: credentials.token}, function (err, user) {
+
             if (user) {
                 user.token.splice(user.token.indexOf(credentials.token), 1);
                 user.save();
