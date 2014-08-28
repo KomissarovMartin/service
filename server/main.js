@@ -19,6 +19,14 @@ app.get('/login', function (request, response) {
     auth.login();
 });
 
+app.get('/chat', function (request, response) {
+
+    new (global._require('controller/chat'))(
+        request,
+        response
+    );
+});
+
 io.on('connection', function(socket) {
 
     socket.on('typing', function(){

@@ -6,7 +6,7 @@ module.exports = function(request, response)
 
         self.user = user;
 
-        response.sendFile('/home/user/.work/projects/service/chat-server/view/chat.html');
+        response.sendFile(global.settings.common.root + '/view/chat.html');
     });
 
     var self = this;

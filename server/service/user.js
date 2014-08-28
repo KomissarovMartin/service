@@ -5,12 +5,12 @@ module.exports = function ( ) {
 
     this.signInWithToken = function (credentials, callback) {
 
-        User.findOne({_id: credentials.userId}, function (error, user) {
+        User.findOne({_id: credentials.userId}, function (error, _userModel) {
 
             var userModel = null;
 
-            if (user && user.token.indexOf(credentials.token) !== -1) {
-                userModel = user;
+            if (_userModel && _userModel.token.indexOf(credentials.token) !== -1) {
+                userModel = _userModel;
             }
 
             if (callback) {
@@ -26,15 +26,15 @@ module.exports = function ( ) {
             password: crenentials.password
         };
 
-        User.findOne(cond, function (error, user) {
+        User.findOne(cond, function (error, userModel) {
 
-            if (user) {
-                user.token.push(generateToken(user.login));
-                user.save();
+            if (userModel) {
+                userModel.token.push(generateToken(userModel.login));
+                userModel.save();
             }
 
             if (callback) {
-                callback(user);
+                callback(userModel);
             }
         });
     };
@@ -63,28 +63,28 @@ module.exports = function ( ) {
 
     this.signUp = function (credentials, callback) {
 
-        User.findOne({login: credentials.login}, function(error, user) {
+        User.findOne({login: credentials.login}, function(error, userModel) {
 
-            if (!user) {
+            if (!userModel) {
 
                 if (!isValid(credentials)) {
 
                     if (callback) {
-                        callback(['invalid credentials'], user);
+                        callback(['invalid credentials'], userModel);
                     }
 
                     return;
                 }
 
-                var user = new User({
+                var userModel = new User({
                     login: credentials.login,
                     password: credentials.password,
                     token: [generateToken(credentials.login)]
                 });
 
-                user.save(function (error) {
+                userModel.save(function (error) {
                     if (callback) {
-                        callback(error, user);
+                        callback(error, userModel);
                     }
                 });
 
@@ -92,18 +92,18 @@ module.exports = function ( ) {
             }
 
             if (callback) {
-                callback(['login exists'], user);
+                callback(['login exists'], userModel);
             }
         });
     }
 
     this.signOut = function (credentials, callback) {
 
-        User.findOne({_id:credentials.userId, token: credentials.token}, function (err, user) {
+        User.findOne({_id:credentials.userId, token: credentials.token}, function (err, userModel) {
 
-            if (user) {
-                user.token.splice(user.token.indexOf(credentials.token), 1);
-                user.save();
+            if (userModel) {
+                userModel.token.splice(userModel.token.indexOf(credentials.token), 1);
+                userModel.save();
             }
 
             if (callback) {
