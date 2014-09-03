@@ -4,7 +4,7 @@ vendor
 
 angularjs/logs/*
 angularjs/!.gitkeep
-angularjs/node_modules/
+angularjs/node_modules
 angularjs/tmp
 angularjs/angular-phonecat-snapshots
-angularjs/bower_components/
+angularjs/app/bower_components
